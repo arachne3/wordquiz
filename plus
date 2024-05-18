@@ -1,0 +1,3 @@
+Using scanf to take input can be insecure. Instead, you can safely receive input by using fgets to get strings.
+
+Since the strings returned by the read_a_line function are dynamically allocated, you should free that memory in the main function
