@@ -78,7 +78,10 @@ char * read_a_line (FILE * fp)
 	return s ;
 }
 
-
+void clear_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
 void print_menu() {
 
