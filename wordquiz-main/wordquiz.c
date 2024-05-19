@@ -93,6 +93,7 @@ int get_command() {
 
 	printf(">") ;
 	scanf("%d", &cmd) ;
+	clear_input_buffer();
 	return cmd ;
 }
 
@@ -124,6 +125,7 @@ void show_words ()
     printf("Type in the name of the wordbook?\n");
     printf(">");
     scanf("%s", wordbook);
+	clear_input_buffer();
 
     sprintf(filepath, "wordbooks/%s", wordbook);
 
@@ -153,6 +155,7 @@ void run_test ()
 	printf("Type in the name of the wordbook?\n") ;
 	printf(">") ;
 	scanf("%s", wordbook) ;
+	clear_input_buffer();
 
 	sprintf(filepath, "wordbooks/%s", wordbook) ;
 
@@ -174,6 +177,7 @@ void run_test ()
 
 		char answer[128] ;
 		scanf("%s", answer) ;
+		clear_input_buffer();
 
 		if (strcmp(answer, word) == 0) {
 			printf("- correct\n") ;
