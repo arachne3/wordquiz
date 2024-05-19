@@ -116,33 +116,32 @@ void list_wordbooks ()
 
 void show_words ()
 {
-	char wordbook[128] ;
-	char filepath[256] ;
+    char wordbook[128];
+    char filepath[256];
 
-	list_wordbooks() ;
+    list_wordbooks();
 
-	printf("Type in the name of the wordbook?\n") ;
-	printf(">") ;
-	scanf("%s", wordbook) ;
+    printf("Type in the name of the wordbook?\n");
+    printf(">");
+    scanf("%s", wordbook);
 
-	sprintf(filepath, "wordbooks/%s", wordbook) ;
+    sprintf(filepath, "wordbooks/%s", wordbook);
 
-	FILE * fp = fopen(filepath, "r") ;
+    FILE *fp = fopen(filepath, "r");
 
-	printf("\n  -----\n") ;
-	char * line ;
-	while (line = read_a_line(fp)) {
-		char * word = strtok(line, "\"") ;
-		strtok(NULL, "\"") ;
-		char * meaning = strtok(NULL, "\"") ;
+    if (fp == NULL) {
+        printf("Error: Wordbook '%s' does not exist.\n", wordbook);
+        return;
+    }
 
-		printf("  %s : %s\n", word, meaning) ;
-
-		free(line) ;
-	}
-	printf("  -----\n\n") ;
-
-	fclose(fp) ;
+    printf("\n  -----\n");
+    char *line;
+    while ((line = read_a_line(fp))) {
+        char *word = strtok(line, "\"");
+        strtok(NULL, "\"");
+        // ...
+    }
+    fclose(fp);
 }
 
 
