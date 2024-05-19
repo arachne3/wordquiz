@@ -142,6 +142,9 @@ void show_words ()
         char *word = strtok(line, "\"");
         strtok(NULL, "\"");
         // ...
+		char *meaning = strtok(NULL, "\"");
+        printf("Word: %s - Meaning: %s\n", word, meaning);
+        free(line);
     }
     fclose(fp);
 }
