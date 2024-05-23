@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <ctype.h>
+#include <time.h>
+
+typedef struct {
+    char *word;
+    char *meaning;
+} WordEntry;
+
+void shuffle(WordEntry *array, size_t n) {
+    if (n > 1) {
+        for (size_t i = 0; i < n - 1; i++) {
+            size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
+            WordEntry temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+}
+
+char *strndup(const char *s, size_t n) {
+    char *result;
+    size_t len = strlen(s);
+    if (n < len)
+        len = n;
+    result = (char *)malloc(len + 1);
+    if (!result)
+        return 0;
+    result[len] = '\0';
+    return (char *)memcpy(result, s, len);
+}
+
+char *read_a_line(FILE *fp) {
+    static char buf[BUFSIZ];
+    static int buf_n = 0;
+    static int curr = 0;
+
+    if (feof(fp) && curr == buf_n - 1)
+        return 0x0;
+
+    char *s = 0x0;
+    size_t s_len = 0;
+    do {
+        int end = curr;
+        while (!(end >= buf_n || !iscntrl(buf[end]))) {
+            end++;
+        }
+        if (curr < end && s != 0x0) {
+            curr = end;
+            break;
+        }
+        curr = end;
+        while (!(end >= buf_n || iscntrl(buf[end]))) {
+            end++;
+        }
+        if (curr < end) {
+            if (s == 0x0) {
+                s = strndup(buf + curr, end - curr);
+                s_len = end - curr;
+            } else {
+                s = realloc(s, s_len + end - curr + 1);
+                s = strncat(s, buf + curr, end - curr);
+                s_len = s_len + end - curr;
+            }
+        }
+        if (end < buf_n) {
+            curr = end + 1;
+            break;
+        }
+
+        buf_n = fread(buf, 1, sizeof(buf), fp);
+        curr = 0;
+    } while (buf_n > 0);
+    return s;
+}
+
+void clear_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
