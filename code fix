@@ -12,6 +12,7 @@ typedef enum {
     C_SHOW,
     C_TEST,
     C_EXIT,
+    C_ADD, // 단어 추가 메뉴 추가
 } command_t;
 
 
@@ -63,14 +64,49 @@ void print_menu() {
     printf("1. List all wordbooks\n");
     printf("2. Show the words in a wordbook\n");
     printf("3. Test with a wordbook\n");
-    printf("4. Exit\n");
+    printf("4.Add a word to a wordbook\n"); // 단어 추가 메뉴 추가
+    printf("5. Exit\n");
 }
 
 int get_command() {
     int cmd;
     printf(">");
     scanf("%d", &cmd);
+    getchar();  // 개행 문자를 처리하기 위해 추가
     return cmd;
+}
+
+void add_word() { // 단어 추가 함수 추가
+    char wordbook[128];
+    char filepath[256];
+    char word[128];
+    char meaning[256];
+
+    list_wordbooks();
+    printf("Type in the name of the wordbook?\n");
+    printf(">");
+    fgets(wordbook, sizeof(wordbook), stdin);
+    wordbook[strcspn(wordbook, "\n")] = '\0'; // 개행 문자 제거
+    sprintf(filepath, "wordbooks/%s", wordbook);
+    
+    FILE *fp = fopen(filepath, "a");
+    if (!fp) {
+        printf("Could not open wordbook: %s\n", wordbook);
+        return;
+    }
+
+    printf("Enter the word: ");
+    fgets(word, sizeof(word), stdin);
+    word[strcspn(word, "\n")] = '\0'; // 개행 문자 제거
+
+    printf("Enter the meaning: ");
+    fgets(meaning, sizeof(meaning), stdin);
+    meaning[strcspn(meaning, "\n")] = '\0'; // 개행 문자 제거
+
+    fprintf(fp, "\"%s\" : \"%s\"\n", word, meaning);
+    fclose(fp);
+
+    printf("Word added successfully.\n");
 }
 
 void list_wordbooks() {
@@ -161,6 +197,10 @@ int main() {
             }
             case C_TEST: {
                 run_test();
+                break;
+            }
+            case C_ADD: { // 단어 추가 메뉴 추가
+                add_word();
                 break;
             }
             case C_EXIT: {
